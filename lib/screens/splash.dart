@@ -30,8 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
             // Ganti dengan logo atau gambar aplikasi Anda
             Image.asset(
               'images/logo.png',
-              width: 150,
-              height: 150,
+              width: 300,
+              height: 300,
             ),
             SizedBox(height: 20),
             CircularProgressIndicator(),

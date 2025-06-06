@@ -13,7 +13,7 @@ class WelcomePage extends StatelessWidget {
           children: [
             // Ganti dengan gambar ilustrasi atau logo lainnya
             Image.asset(
-              'assets/images/welcome.png',
+              'images/welcome.png',
               width: 200,
               height: 200,
             ),

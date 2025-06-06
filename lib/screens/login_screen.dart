@@ -14,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Login',
+          'LOGIN RM APPS',
           style: TextStyle(
             color: Colors.blueAccent,
             fontWeight: FontWeight.w500,
@@ -29,8 +29,8 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.symmetric(horizontal: 12),
           children: [
             Image.asset(
-              'images/login-logo.jpg',
-              height: 300,
+              'images/login.png',
+              height: 200,
               fit: BoxFit.fill,
             ),
             TextField(
@@ -49,16 +49,25 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 15),
             SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => Beranda()),
-                      (route) => false);
-                },
-                child: const Text('Logout'),
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Beranda()),
+                  (route) => false,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green, 
+                foregroundColor: Colors.white,  // Warna teks
+                padding: const EdgeInsets.symmetric(vertical: 16), // Tinggi tombol
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6), // Tidak terlalu rounded
+                ),
               ),
+              child: const Text('Login'),
             ),
+          ),
           ],
         ),
       ),
