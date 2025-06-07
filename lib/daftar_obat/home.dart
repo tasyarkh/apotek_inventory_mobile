@@ -93,16 +93,15 @@ class _DaftarObatHomeState extends State<DaftarObatHome> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailObatScreen(
-                            kode_obat:
-                                daftarObatList[index]['kode_obat'].toString(),
+                            kode_obat: daftarObatList[index]['kode_obat'].toString(),
                             nama_obat: daftarObatList[index]['nama_obat'],
                             stock: daftarObatList[index]['stock'].toString(),
-                            tgl_kadaluarsa: daftarObatList[index]
-                                ['tgl_kadaluarsa'],
+                            tgl_kadaluarsa: daftarObatList[index]['tgl_kadaluarsa'],
                           ),
                         ),
-                      );
+                      ).then((_) => fetchDaftarObat());
                     },
+
                   ),
                 );
               },
@@ -114,7 +113,10 @@ class _DaftarObatHomeState extends State<DaftarObatHome> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddObatScreen()),
-          );
+          ).then((_) {
+            // refresh data setelah kembali dari AddObatScreen
+            fetchDaftarObat();
+          });
         },
       ),
     );

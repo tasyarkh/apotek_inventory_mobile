@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'detail.dart';
 
 class EditObatScreen extends StatefulWidget {
   final String kode_obat;
@@ -8,7 +9,8 @@ class EditObatScreen extends StatefulWidget {
   final String stock;
   final String tgl_kadaluarsa;
 
-  const EditObatScreen({super.key, 
+  const EditObatScreen({
+    super.key,
     required this.kode_obat,
     required this.nama_obat,
     required this.stock,
@@ -58,10 +60,17 @@ class _EditObatScreenState extends State<EditObatScreen> {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         if (responseData['success']) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Obat berhasil diperbarui')),
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailObatScreen(
+                kode_obat: widget.kode_obat,
+                nama_obat: _namaObatController.text,
+                stock: _stockController.text,
+                tgl_kadaluarsa: _tglKadaluarsaController.text,
+              ),
+            ),
           );
-          Navigator.pop(context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

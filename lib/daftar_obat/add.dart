@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'home.dart'; // Pastikan file ini sesuai path kamu
 
 class AddObatScreen extends StatefulWidget {
   const AddObatScreen({super.key});
@@ -25,28 +26,45 @@ class _AddObatScreenState extends State<AddObatScreen> {
       return;
     }
 
-    final response = await http.post(
-      Uri.parse(
-          'http://localhost:80/api_apotek/daftar_obat/add_daftar_obat.php'),
-      body: {
-        'nama_obat': _namaObatController.text,
-        'stock': _stockController.text,
-        'tgl_kadaluarsa': _tglKadaluarsaController.text,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(responseData['success']
-                ? 'Data obat berhasil ditambahkan'
-                : 'Gagal menambahkan obat')),
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:80/api_apotek/daftar_obat/add_daftar_obat.php'),
+        body: {
+          'nama_obat': _namaObatController.text,
+          'stock': _stockController.text,
+          'tgl_kadaluarsa': _tglKadaluarsaController.text,
+        },
       );
-      if (responseData['success']) Navigator.pop(context);
-    } else {
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+
+        if (responseData['success']) {
+          // Tampilkan pesan sukses
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data obat berhasil ditambahkan')),
+          );
+
+          // Redirect ke halaman detail
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DaftarObatHome(),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(responseData['message'] ?? 'Gagal menambahkan obat')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gagal terhubung ke server')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gagal menambahkan obat')),
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
       );
     }
   }
@@ -109,7 +127,8 @@ class _AddObatScreenState extends State<AddObatScreen> {
                 label: const Text('Simpan'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal[400]!,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

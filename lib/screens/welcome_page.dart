@@ -5,7 +5,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 211, 255, 225),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -42,8 +42,13 @@ class WelcomePage extends StatelessWidget {
               },
               child: Text('Mulai'),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-              ),
+                  backgroundColor: const Color(0xFF68A77C), // Warna hex
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 80),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
             ),
           ],
         ),
