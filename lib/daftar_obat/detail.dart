@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'edit.dart';
+import 'home.dart';
+import 'dart:convert';
 
 class DetailObatScreen extends StatelessWidget {
   final String kode_obat;
@@ -8,7 +10,8 @@ class DetailObatScreen extends StatelessWidget {
   final String stock;
   final String tgl_kadaluarsa;
 
-  const DetailObatScreen({super.key, 
+  const DetailObatScreen({
+    super.key,
     required this.kode_obat,
     required this.nama_obat,
     required this.stock,
@@ -16,49 +19,71 @@ class DetailObatScreen extends StatelessWidget {
   });
 
   void _showDeleteConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Konfirmasi'),
-          content: const Text('Apakah Anda yakin ingin menghapus item ini?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Batal',
-                  style: TextStyle(color: Colors.greenAccent)),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Hapus',
-                  style: TextStyle(color: Colors.redAccent)),
-              onPressed: () {
-                Navigator.of(context).pop();
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Konfirmasi'),
+        content: const Text('Apakah Anda yakin ingin menghapus item ini?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Batal', style: TextStyle(color: Colors.greenAccent)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Hapus', style: TextStyle(color: Colors.redAccent)),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Future.delayed(const Duration(milliseconds: 200), () {
                 _deleteObat(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+              });
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   Future<void> _deleteObat(BuildContext context) async {
-    final response = await http.post(
-      Uri.parse(
-          'http://localhost:80/api_apotek/daftar_obat/delete_daftar_obat.php'),
-      body: {'kode_obat': kode_obat},
-    );
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data berhasil dihapus')),
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'http://localhost:80/api_apotek/daftar_obat/delete_daftar_obat.php'),
+        body: {'kode_obat': kode_obat},
       );
-      Navigator.pop(context);
-    } else {
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+
+        if (responseData['success']) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data berhasil dihapus')),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => DaftarObatHome()),
+          );
+
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text(responseData['message'] ?? 'Gagal menghapus data')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gagal terhubung ke server')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gagal menghapus data')),
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
       );
     }
   }
@@ -86,7 +111,8 @@ class DetailObatScreen extends StatelessWidget {
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
-                Text('Nama Obat: $nama_obat', style: const TextStyle(fontSize: 18)),
+                Text('Nama Obat: $nama_obat',
+                    style: const TextStyle(fontSize: 18)),
                 const SizedBox(height: 10),
                 Text('Stock: $stock', style: const TextStyle(fontSize: 18)),
                 const SizedBox(height: 10),

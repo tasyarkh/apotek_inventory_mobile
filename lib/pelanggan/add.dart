@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'home.dart'; // ganti dengan path file halaman home pelanggan kamu
 
 class AddPelangganScreen extends StatefulWidget {
   const AddPelangganScreen({super.key});
@@ -10,25 +11,9 @@ class AddPelangganScreen extends StatefulWidget {
 }
 
 class _AddPelangganScreenState extends State<AddPelangganScreen> {
-  late TextEditingController _namaController;
-  late TextEditingController _alamatController;
-  late TextEditingController _noHpController;
-
-  @override
-  void initState() {
-    super.initState();
-    _namaController = TextEditingController();
-    _alamatController = TextEditingController();
-    _noHpController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _namaController.dispose();
-    _alamatController.dispose();
-    _noHpController.dispose();
-    super.dispose();
-  }
+  final TextEditingController _namaController = TextEditingController();
+  final TextEditingController _alamatController = TextEditingController();
+  final TextEditingController _noHpController = TextEditingController();
 
   Future<void> _addPelanggan() async {
     if (_namaController.text.isEmpty ||
@@ -40,27 +25,42 @@ class _AddPelangganScreenState extends State<AddPelangganScreen> {
       return;
     }
 
-    final response = await http.post(
-      Uri.parse('http://localhost:80/api_apotek/pelanggan/add_pelanggan.php'),
-      body: {
-        'nama': _namaController.text,
-        'alamat': _alamatController.text,
-        'no_hp': _noHpController.text,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(responseData['success']
-                ? 'Data berhasil ditambahkan'
-                : 'Gagal menambahkan data')),
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:80/api_apotek/pelanggan/add_pelanggan.php'),
+        body: {
+          'nama': _namaController.text,
+          'alamat': _alamatController.text,
+          'no_hp': _noHpController.text,
+        },
       );
-      if (responseData['success']) Navigator.pop(context);
-    } else {
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+
+        if (responseData['success']) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data pelanggan berhasil ditambahkan')),
+          );
+
+          // Redirect ke halaman home pelanggan
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => PelangganHome()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(responseData['message'] ?? 'Gagal menambahkan pelanggan')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gagal terhubung ke server')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gagal menambahkan data')),
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
       );
     }
   }

@@ -47,32 +47,30 @@ class DetailPelangganScreen extends StatelessWidget {
   }
 
   Future<void> _deletePelanggan(BuildContext context) async {
-    final response = await http.post(
-      Uri.parse(
-          'http://localhost:80/api_apotek/pelanggan/delete_pelanggan.php'),
-      body: {'id': id},
-    );
+  final response = await http.post(
+    Uri.parse('http://localhost:80/api_apotek/pelanggan/delete_pelanggan.php'),
+    body: {'id': id},
+  );
 
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      if (responseData['success']) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Data berhasil dihapus')),
-        );
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content:
-                  Text('Gagal menghapus data: ${responseData['message']}')),
-        );
-      }
+  if (response.statusCode == 200) {
+    final responseData = json.decode(response.body);
+    if (responseData['success']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data berhasil dihapus')),
+      );
+      Navigator.of(context).pop(true);// ✅ kembali ke halaman home dan trigger refresh
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gagal menghapus data')),
+        SnackBar(content: Text('Gagal menghapus data: ${responseData['message']}')),
       );
     }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Gagal menghapus data')),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

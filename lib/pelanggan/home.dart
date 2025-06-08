@@ -87,8 +87,8 @@ class _PelangganHomeState extends State<PelangganHome> {
                       pelangganList[index]['no_hp'],
                       style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                     ),
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailPelangganScreen(
@@ -99,6 +99,10 @@ class _PelangganHomeState extends State<PelangganHome> {
                           ),
                         ),
                       );
+
+                      if (result == true) {
+                        fetchPelanggan(); // 🔁 refresh data
+                      }
                     },
                   ),
                 );
@@ -111,7 +115,11 @@ class _PelangganHomeState extends State<PelangganHome> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddPelangganScreen()),
-          );
+          ).then((value) {
+            if (value == true) {
+              fetchPelanggan(); // 🔁 refresh setelah tambah
+            }
+          });
         },
       ),
     );

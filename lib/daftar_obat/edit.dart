@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'detail.dart';
+import 'home.dart'; // Ganti sesuai dengan path file home.dart kamu
 
 class EditObatScreen extends StatefulWidget {
   final String kode_obat;
@@ -45,10 +45,11 @@ class _EditObatScreenState extends State<EditObatScreen> {
   }
 
   Future<void> _updateObat() async {
-    if (_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate()) return;
+
+    try {
       final response = await http.post(
-        Uri.parse(
-            'http://localhost:80/api_apotek/daftar_obat/edit_daftar_obat.php'),
+        Uri.parse('http://localhost:80/api_apotek/daftar_obat/edit_daftar_obat.php'),
         body: {
           'kode_obat': widget.kode_obat,
           'nama_obat': _namaObatController.text,
@@ -59,30 +60,30 @@ class _EditObatScreenState extends State<EditObatScreen> {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
+
         if (responseData['success']) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data obat berhasil diperbarui')),
+          );
+
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder: (context) => DetailObatScreen(
-                kode_obat: widget.kode_obat,
-                nama_obat: _namaObatController.text,
-                stock: _stockController.text,
-                tgl_kadaluarsa: _tglKadaluarsaController.text,
-              ),
-            ),
+            MaterialPageRoute(builder: (context) => DaftarObatHome()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text('Gagal memperbarui obat: ${responseData['message']}')),
+            SnackBar(content: Text(responseData['message'] ?? 'Gagal memperbarui data')),
           );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Gagal memperbarui obat')),
+          const SnackBar(content: Text('Gagal terhubung ke server')),
         );
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
     }
   }
 
@@ -119,35 +120,23 @@ class _EditObatScreenState extends State<EditObatScreen> {
               TextFormField(
                 controller: _namaObatController,
                 decoration: _buildInputDecoration('Nama Obat'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Nama Obat tidak boleh kosong';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                    value!.isEmpty ? 'Nama Obat tidak boleh kosong' : null,
               ),
               const SizedBox(height: 15),
               TextFormField(
                 controller: _stockController,
                 decoration: _buildInputDecoration('Stock'),
                 keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Stock tidak boleh kosong';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                    value!.isEmpty ? 'Stock tidak boleh kosong' : null,
               ),
               const SizedBox(height: 15),
               TextFormField(
                 controller: _tglKadaluarsaController,
                 decoration: _buildInputDecoration('Tanggal Kadaluarsa'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Tanggal Kadaluarsa tidak boleh kosong';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                    value!.isEmpty ? 'Tanggal Kadaluarsa tidak boleh kosong' : null,
               ),
               const SizedBox(height: 20),
               ElevatedButton(

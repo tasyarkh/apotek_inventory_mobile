@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'detail.dart';
 
 class EditPelangganScreen extends StatefulWidget {
   final String id;
@@ -8,7 +9,8 @@ class EditPelangganScreen extends StatefulWidget {
   final String alamat;
   final String noHp;
 
-  const EditPelangganScreen({super.key, 
+  const EditPelangganScreen({
+    super.key,
     required this.id,
     required this.nama,
     required this.alamat,
@@ -60,7 +62,24 @@ class _EditPelangganScreenState extends State<EditPelangganScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Data berhasil diperbarui')),
           );
-          Navigator.pop(context);
+          if (responseData['success']) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Data berhasil diperbarui')),
+            );
+
+            // Arahkan ke halaman detail pelanggan
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailPelangganScreen(
+                  id: widget.id,
+                  nama: _namaController.text,
+                  alamat: _alamatController.text,
+                  noHp: _noHpController.text,
+                ),
+              ),
+            );
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -143,7 +162,8 @@ class _EditPelangganScreenState extends State<EditPelangganScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.greenAccent[400]!,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
                 onPressed: _updatePelanggan,
                 child: const Text('Perbarui'),
