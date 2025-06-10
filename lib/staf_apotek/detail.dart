@@ -39,7 +39,7 @@ class DetailStafScreen extends StatelessWidget {
               child: const Text('Hapus',
                   style: TextStyle(color: Colors.redAccent)),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context, true);
                 _deleteStaf(context);
               },
             ),
@@ -61,7 +61,7 @@ class DetailStafScreen extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Data berhasil dihapus')),
         );
-        Navigator.pop(context);
+        Navigator.pop(context, true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Gagal menghapus data: ${result['message']}')),
@@ -110,18 +110,23 @@ class DetailStafScreen extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditStafScreen(
-                              id: id,
-                              nama: nama,
-                              alamat: alamat,
-                              tglLahir: tglLahir,
-                              tmpLahir: tmpLahir,
-                              noHp: noHp,
-                            ),
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditStafScreen(
+                            id: id,
+                            nama: nama,
+                            alamat: alamat,
+                            tglLahir: tglLahir,
+                            tmpLahir: tmpLahir,
+                            noHp: noHp,
                           ),
-                        );
+                        ),
+                      ).then((result) {
+                        if (result == true) {
+                          Navigator.pop(context, true); // Kembali ke Home dan trigger refresh
+                        }
+                      });
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.lightGreen[400]!,

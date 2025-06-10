@@ -59,8 +59,8 @@ class _EditPemasokScreenState extends State<EditPemasokScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Pemasok berhasil diperbarui')),
           );
-          Navigator.pop(context);
-        } else {
+          Navigator.pop(context, true); // Kirim sinyal sukses
+        }else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Gagal memperbarui pemasok')),
           );

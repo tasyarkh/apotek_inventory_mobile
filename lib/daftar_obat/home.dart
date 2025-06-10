@@ -59,7 +59,7 @@ class _DaftarObatHomeState extends State<DaftarObatHome> {
               itemCount: daftarObatList.length,
               itemBuilder: (context, index) {
                 return Card(
-                  color: Colors.teal[400]!,
+                  color: Colors.teal[100]!,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),

@@ -63,7 +63,7 @@ class _PelangganHomeState extends State<PelangganHome> {
               itemCount: pelangganList.length,
               itemBuilder: (context, index) {
                 return Card(
-                  color: Colors.greenAccent[400]!,
+                  color: Colors.greenAccent[100]!,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),

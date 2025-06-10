@@ -55,20 +55,22 @@ class _StafHomeState extends State<StafHome> {
       ),
       body: isLoading
           ? Center(
-              child: CircularProgressIndicator(color: Colors.lightGreen[400]!))
+              child:
+                  CircularProgressIndicator(color: Colors.lightGreen[400]!))
           : ListView.builder(
               itemCount: stafList.length,
               itemBuilder: (context, index) {
                 return Card(
-                  color: Colors.lightGreen[400]!,
+                  color: Colors.lightGreen[300]!,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
                   elevation: 2,
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: ListTile(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 16),
                     leading: const CircleAvatar(
                       backgroundColor: Colors.white,
                       child: Icon(Icons.person, color: Colors.black),
@@ -84,8 +86,9 @@ class _StafHomeState extends State<StafHome> {
                       stafList[index]['no_hp'],
                       style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                     ),
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      // 👇 Tunggu hasil dari halaman detail, lalu refresh jika perlu
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailStafScreen(
@@ -98,6 +101,10 @@ class _StafHomeState extends State<StafHome> {
                           ),
                         ),
                       );
+
+                      if (result == true) {
+                        fetchStaf(); // Auto-refresh jika ada perubahan
+                      }
                     },
                   ),
                 );
@@ -106,11 +113,16 @@ class _StafHomeState extends State<StafHome> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.lightGreen[400]!,
         child: const Icon(Icons.add, color: Colors.white),
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          // 👇 Tunggu hasil dari halaman tambah, lalu refresh jika perlu
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddStafScreen()),
           );
+
+          if (result == true) {
+            fetchStaf(); // Auto-refresh setelah tambah
+          }
         },
       ),
     );

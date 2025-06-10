@@ -35,7 +35,7 @@ class _AddStafScreenState extends State<AddStafScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(result['message'])),
         );
-        if (result['success']) Navigator.pop(context);
+        if (result['success']) Navigator.pop(context, true); // Kirim true ke Home
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Gagal menambahkan staf')),

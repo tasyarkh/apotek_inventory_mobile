@@ -114,7 +114,7 @@ class _StockObatHomeState extends State<StockObatHome> {
               itemCount: stockObatList.length,
               itemBuilder: (context, index) {
                 return Card(
-                  color: Colors.redAccent.shade100,
+                  color: Colors.red[100],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -138,7 +138,7 @@ class _StockObatHomeState extends State<StockObatHome> {
                       ),
                       subtitle: Text(
                         'Jumlah: ${stockObatList[index]['jumlah_obat_masuk'] ?? 0}',
-                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[900]),
                       ),
                       trailing: IconButton(
                         icon: Icon(Icons.delete, color: Colors.redAccent[400]),

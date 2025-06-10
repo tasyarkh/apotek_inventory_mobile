@@ -86,14 +86,17 @@ class _PemasokObatHomeState extends State<PemasokObatHome> {
                     ),
                     trailing: Icon(Icons.arrow_forward_ios,
                         color: Colors.lightBlue[400]),
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
                               DetailPemasokScreen(pemasok: pemasokList[index]),
                         ),
                       );
+                      if (result == true) {
+                        fetchPemasok(); // refresh otomatis setelah edit
+                      }
                     },
                   ),
                 );

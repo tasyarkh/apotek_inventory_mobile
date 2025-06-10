@@ -71,8 +71,8 @@ class _EditStafScreenState extends State<EditStafScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Data berhasil diperbarui')),
           );
-          Navigator.pop(context);
-        } else {
+          Navigator.pop(context, true); // kirim sinyal sukses
+        }else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text('Gagal memperbarui data: ${result['message']}')),

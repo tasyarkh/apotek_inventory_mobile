@@ -20,7 +20,7 @@ class DetailPemasokScreen extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Pemasok berhasil dihapus')),
       );
-      Navigator.pop(context); // Kembali ke halaman sebelumnya
+      Navigator.pop(context, true); // Kembali ke halaman sebelumnya
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Gagal menghapus pemasok')),
@@ -101,14 +101,16 @@ class DetailPemasokScreen extends StatelessWidget {
                       ),
                       icon: const Icon(Icons.edit),
                       label: const Text('Edit'),
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                EditPemasokScreen(pemasok: pemasok),
+                            builder: (context) => EditPemasokScreen(pemasok: pemasok),
                           ),
                         );
+                        if (result == true) {
+                          Navigator.pop(context, true); // Kembalikan ke Home agar bisa refresh
+                        }
                       },
                     ),
                     ElevatedButton.icon(
