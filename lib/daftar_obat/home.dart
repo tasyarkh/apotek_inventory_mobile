@@ -88,8 +88,8 @@ class _DaftarObatHomeState extends State<DaftarObatHome> {
                       'Exp: ${daftarObatList[index]['tgl_kadaluarsa']}',
                       style: const TextStyle(color: Colors.redAccent),
                     ),
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailObatScreen(
@@ -99,9 +99,12 @@ class _DaftarObatHomeState extends State<DaftarObatHome> {
                             tgl_kadaluarsa: daftarObatList[index]['tgl_kadaluarsa'],
                           ),
                         ),
-                      ).then((_) => fetchDaftarObat());
-                    },
+                      );
 
+                      if (result == true) {
+                        fetchDaftarObat(); // refresh setelah edit/hapus
+                      }
+                    },
                   ),
                 );
               },
@@ -109,14 +112,15 @@ class _DaftarObatHomeState extends State<DaftarObatHome> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.teal[400]!,
         child: const Icon(Icons.add, color: Colors.white),
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddObatScreen()),
-          ).then((_) {
-            // refresh data setelah kembali dari AddObatScreen
-            fetchDaftarObat();
-          });
+          );
+
+          if (result == true) {
+            fetchDaftarObat(); // refresh setelah tambah
+          }
         },
       ),
     );

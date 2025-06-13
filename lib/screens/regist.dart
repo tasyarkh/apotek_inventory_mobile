@@ -1,70 +1,73 @@
 import 'package:flutter/material.dart';
-import 'beranda.dart';
+import 'login_screen.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset(
-          'images/logo.png', // Pastikan file ini tersedia
-          height: 40,
+        title: Text(
+          'Buat Akun',
+          style: TextStyle(
+            color: Colors.blueAccent,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        elevation: 0,
       ),
       body: SafeArea(
         bottom: false,
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: EdgeInsets.symmetric(horizontal: 12),
           children: [
-            const SizedBox(height: 20),
-            Center(
-              child: Image.asset(
-                'images/login.png',
-                height: 300,
-                width: 300,
-                fit: BoxFit.contain,
+            Image.asset(
+              'images/register.png',
+              height: 300,
+              fit: BoxFit.fill,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: "Nama Lengkap",
+                prefixIcon: Icon(Icons.account_circle_outlined),
               ),
             ),
-            Text(
-              'Login dengan akunmu sekarang',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.grey[700],
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 35),
-            const TextField(
+            SizedBox(height: 15),
+            TextField(
               decoration: InputDecoration(
                 labelText: "Email",
                 prefixIcon: Icon(Icons.email_outlined),
               ),
             ),
-            const SizedBox(height: 15),
-            const TextField(
+            SizedBox(height: 15),
+            TextField(
+              decoration: InputDecoration(
+                labelText: "No. Hp",
+                prefixIcon: Icon(Icons.phone),
+              ),
+            ),
+            SizedBox(height: 15),
+            TextField(
               obscureText: true,
               decoration: InputDecoration(
                 labelText: "Password",
                 prefixIcon: Icon(Icons.lock_clock_outlined),
               ),
             ),
-            const SizedBox(height: 45),
+            SizedBox(height: 25),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const Beranda()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                     (route) => false,
                   );
                 },
@@ -76,9 +79,10 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
-                child: const Text('Login'),
+                child: const Text('Registrasi'),
               ),
             ),
+            SizedBox(height: 15),
           ],
         ),
       ),

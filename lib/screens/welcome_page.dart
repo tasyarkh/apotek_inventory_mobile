@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
+import 'regist.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -38,17 +39,34 @@ class WelcomePage extends StatelessWidget {
             SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,MaterialPageRoute(builder: (context) => LoginPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
               },
-              child: Text('Mulai'),
+              child: Text('Login'),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF68A77C), // Warna hex
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 80),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+                backgroundColor: const Color(0xFF68A77C), // Warna hex
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 25, horizontal: 80),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RegisterPage()));
+              },
+              child: Text('Regist'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: const Color(0xFF68A77C), width: 3),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
             ),
           ],
         ),

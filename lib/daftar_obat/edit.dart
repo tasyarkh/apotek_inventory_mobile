@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'home.dart'; // Ganti sesuai dengan path file home.dart kamu
+
 
 class EditObatScreen extends StatefulWidget {
   final String kode_obat;
@@ -66,10 +66,7 @@ class _EditObatScreenState extends State<EditObatScreen> {
             const SnackBar(content: Text('Data obat berhasil diperbarui')),
           );
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => DaftarObatHome()),
-          );
+          Navigator.pop(context, true); // Sinyal berhasil
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(responseData['message'] ?? 'Gagal memperbarui data')),
@@ -86,6 +83,7 @@ class _EditObatScreenState extends State<EditObatScreen> {
       );
     }
   }
+
 
   InputDecoration _buildInputDecoration(String labelText) {
     return InputDecoration(
