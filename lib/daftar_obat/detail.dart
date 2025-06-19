@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'edit.dart';
-import 'home.dart';
 import 'dart:convert';
 
 class DetailObatScreen extends StatelessWidget {
@@ -19,40 +18,36 @@ class DetailObatScreen extends StatelessWidget {
   });
 
   void _showDeleteConfirmationDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Konfirmasi'),
-        content: const Text('Apakah Anda yakin ingin menghapus item ini?'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Batal', style: TextStyle(color: Colors.greenAccent)),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: const Text('Hapus', style: TextStyle(color: Colors.redAccent)),
-            onPressed: () {
-              Navigator.of(context).pop();
-              Future.delayed(const Duration(milliseconds: 200), () {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi'),
+          content: const Text('Apakah Anda yakin ingin menghapus obat ini?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Batal', style: TextStyle(color: Colors.greenAccent)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Hapus', style: TextStyle(color: Colors.redAccent)),
+              onPressed: () {
+                Navigator.of(context).pop(); // tutup dialog
                 _deleteObat(context);
-              });
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> _deleteObat(BuildContext context) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://localhost:80/api_apotek/daftar_obat/delete_daftar_obat.php'),
+        Uri.parse('http://localhost:80/api_apotek/daftar_obat/delete_daftar_obat.php'),
         body: {'kode_obat': kode_obat},
       );
 
@@ -64,16 +59,10 @@ class DetailObatScreen extends StatelessWidget {
             const SnackBar(content: Text('Data berhasil dihapus')),
           );
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => DaftarObatHome()),
-          );
-
+          Navigator.pop(context, true); // balik ke home dan trigger refresh
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text(responseData['message'] ?? 'Gagal menghapus data')),
+            SnackBar(content: Text(responseData['message'] ?? 'Gagal menghapus data')),
           );
         }
       } else {
@@ -87,6 +76,7 @@ class DetailObatScreen extends StatelessWidget {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -107,17 +97,13 @@ class DetailObatScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Detail Obat',
-                    style:
-                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                const Text('Detail Obat', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
-                Text('Nama Obat: $nama_obat',
-                    style: const TextStyle(fontSize: 18)),
+                Text('Nama Obat: $nama_obat', style: const TextStyle(fontSize: 18)),
                 const SizedBox(height: 10),
                 Text('Stock: $stock', style: const TextStyle(fontSize: 18)),
                 const SizedBox(height: 10),
-                Text('Tanggal Kadaluarsa: $tgl_kadaluarsa',
-                    style: const TextStyle(fontSize: 18)),
+                Text('Tanggal Kadaluarsa: $tgl_kadaluarsa', style: const TextStyle(fontSize: 18)),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -139,7 +125,11 @@ class DetailObatScreen extends StatelessWidget {
                               tgl_kadaluarsa: tgl_kadaluarsa,
                             ),
                           ),
-                        );
+                        ).then((result) {
+                          if (result == true) {
+                            Navigator.pop(context, true); // kembali ke Home dan refresh
+                          }
+                        });
                       },
                     ),
                     ElevatedButton.icon(

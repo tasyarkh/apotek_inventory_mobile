@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'edit.dart';
@@ -7,20 +8,26 @@ class DetailPemasokScreen extends StatelessWidget {
 
   const DetailPemasokScreen({super.key, required this.pemasok});
 
-  Future<void> deletePemasok(BuildContext context) async {
+  Future<void> _deletePemasok(BuildContext context) async {
     final response = await http.post(
-      Uri.parse(
-          'http://localhost:80/api_apotek/pemasok_obat/delete_pemasok_obat.php'),
+      Uri.parse('http://localhost:80/api_apotek/pemasok_obat/delete_pemasok_obat.php'),
       body: {
         'kode_perusahaan': pemasok['kode_perusahaan'].toString(),
       },
     );
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pemasok berhasil dihapus')),
-      );
-      Navigator.pop(context, true); // Kembali ke halaman sebelumnya
+      final result = json.decode(response.body);
+      if (result['success']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Pemasok berhasil dihapus')),
+        );
+        Navigator.pop(context, true); // Kembali ke home dan trigger refresh
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal menghapus pemasok: ${result['message']}')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Gagal menghapus pemasok')),
@@ -47,8 +54,8 @@ class DetailPemasokScreen extends StatelessWidget {
               child: const Text('Hapus',
                   style: TextStyle(color: Colors.redAccent)),
               onPressed: () {
-                Navigator.of(context).pop();
-                deletePemasok(context); // Hapus pemasok
+                Navigator.of(context).pop(); // tutup dialog
+                _deletePemasok(context); // lanjutkan proses hapus
               },
             ),
           ],
@@ -77,8 +84,7 @@ class DetailPemasokScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Detail Pemasok',
-                    style:
-                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
                 Text('Nama Perusahaan: ${pemasok['nama_perusahaan']}',
                     style: const TextStyle(fontSize: 18)),
@@ -105,11 +111,12 @@ class DetailPemasokScreen extends StatelessWidget {
                         final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EditPemasokScreen(pemasok: pemasok),
+                            builder: (context) =>
+                                EditPemasokScreen(pemasok: pemasok),
                           ),
                         );
                         if (result == true) {
-                          Navigator.pop(context, true); // Kembalikan ke Home agar bisa refresh
+                          Navigator.pop(context, true); // Kembali ke Home dan trigger refresh
                         }
                       },
                     ),

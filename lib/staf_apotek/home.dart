@@ -3,6 +3,10 @@ import 'package:http/http.dart' as http;
 import 'add.dart';
 import 'detail.dart';
 import 'dart:convert';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+
 
 class StafHome extends StatefulWidget {
   const StafHome({super.key});
@@ -37,6 +41,33 @@ class _StafHomeState extends State<StafHome> {
       );
     }
   }
+  void _printStafList() async {
+            final pdf = pw.Document();
+
+            pdf.addPage(
+              pw.MultiPage(
+                build: (context) => [
+                  pw.Text('Laporan Data Staf Apotek',
+                      style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+                  pw.SizedBox(height: 16),
+                  pw.Table.fromTextArray(
+                    headers: ['Nama', 'No. HP', 'Alamat'],
+                    data: stafList.map((staf) {
+                      return [
+                        staf['nama'] ?? '',
+                        staf['no_hp'] ?? '',
+                        staf['alamat'] ?? '',
+                      ];
+                    }).toList(),
+                  ),
+                ],
+              ),
+            );
+
+            await Printing.layoutPdf(
+              onLayout: (PdfPageFormat format) async => pdf.save(),
+            );
+          }
 
   @override
   void initState() {
@@ -52,6 +83,14 @@ class _StafHomeState extends State<StafHome> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.lightGreen[400]!,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.print),
+            onPressed: () {
+              _printStafList(); // Fungsi print
+            },
+          ),
+        ],
       ),
       body: isLoading
           ? Center(

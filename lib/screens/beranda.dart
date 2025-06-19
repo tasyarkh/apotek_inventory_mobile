@@ -6,6 +6,7 @@ import 'package:inv_apt_mobile/staf_apotek/home.dart';
 import 'package:inv_apt_mobile/daftar_obat/home.dart';
 import 'package:inv_apt_mobile/stock_obat_view_search/home.dart';
 import 'package:inv_apt_mobile/screens/splash.dart';
+import 'profile_page.dart';
 
 class Beranda extends StatelessWidget {
   const Beranda({super.key});
@@ -21,7 +22,25 @@ class Beranda extends StatelessWidget {
         backgroundColor: Colors.greenAccent,
         centerTitle: true,
         elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfilePage()),
+                );
+              },
+              child: const CircleAvatar(
+                backgroundImage: AssetImage('images/avatar.jpg'), // Ganti dengan path asset kamu
+                radius: 18,
+              ),
+            ),
+          ),
+        ],
       ),
+
       body: Column(
         children: [
           Expanded(

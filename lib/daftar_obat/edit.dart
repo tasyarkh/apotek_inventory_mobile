@@ -132,9 +132,23 @@ class _EditObatScreenState extends State<EditObatScreen> {
               const SizedBox(height: 15),
               TextFormField(
                 controller: _tglKadaluarsaController,
+                readOnly: true,
                 decoration: _buildInputDecoration('Tanggal Kadaluarsa'),
                 validator: (value) =>
                     value!.isEmpty ? 'Tanggal Kadaluarsa tidak boleh kosong' : null,
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+
+                  if (pickedDate != null) {
+                    _tglKadaluarsaController.text =
+                        pickedDate.toIso8601String().split('T')[0]; // Format YYYY-MM-DD
+                  }
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(

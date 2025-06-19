@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'edit.dart';
+import 'package:inv_apt_mobile/pelanggan/home.dart';
+
 
 class DetailPelangganScreen extends StatelessWidget {
   final String id;
@@ -9,7 +11,8 @@ class DetailPelangganScreen extends StatelessWidget {
   final String alamat;
   final String noHp;
 
-  const DetailPelangganScreen({super.key, 
+  const DetailPelangganScreen({
+    super.key,
     required this.id,
     required this.nama,
     required this.alamat,
@@ -36,8 +39,8 @@ class DetailPelangganScreen extends StatelessWidget {
               child: const Text('Hapus',
                   style: TextStyle(color: Colors.redAccent)),
               onPressed: () {
-                Navigator.of(context).pop();
-                _deletePelanggan(context);
+                Navigator.pop(context, true); // Tutup dialog
+                _deletePelanggan(context); // Panggil fungsi hapus
               },
             ),
           ],
@@ -47,36 +50,47 @@ class DetailPelangganScreen extends StatelessWidget {
   }
 
   Future<void> _deletePelanggan(BuildContext context) async {
-  final response = await http.post(
-    Uri.parse('http://localhost:80/api_apotek/pelanggan/delete_pelanggan.php'),
-    body: {'id': id},
-  );
+    try {
+      final response = await http.post(
+        Uri.parse(
+            "http://localhost:80/api_apotek/pelanggan/delete_pelanggan.php"),
+        body: {
+          'id': id.toString(),
+        },
+      );
 
-  if (response.statusCode == 200) {
-    final responseData = json.decode(response.body);
-    if (responseData['success']) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data berhasil dihapus')),
-      );
-      Navigator.of(context).pop(true);// ✅ kembali ke halaman home dan trigger refresh
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal menghapus data: ${responseData['message']}')),
-      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success']) {
+          // Tampilkan notifikasi berhasil
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data berhasil dihapus')),
+          );
+
+          // Arahkan ke halaman Home dan hapus semua route sebelumnya
+          Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const PelangganHome()),
+        );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Gagal: ${data['message']}')),
+          );
+        }
+      } else {
+        print('Status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Terjadi kesalahan: $e');
     }
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Gagal menghapus data')),
-    );
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail Pelanggan', style: TextStyle(color: Colors.white)),
+        title: const Text('Detail Pelanggan',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.greenAccent[400]!,
         elevation: 0,
       ),
@@ -84,9 +98,8 @@ class DetailPelangganScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Card(
           elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -113,12 +126,16 @@ class DetailPelangganScreen extends StatelessWidget {
                               noHp: noHp,
                             ),
                           ),
-                        );
+                        ).then((result) {
+                          if (result == true) {
+                            Navigator.pop(context, true); // ✅ Trigger refresh
+                          }
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.greenAccent[400]!,
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -129,8 +146,8 @@ class DetailPelangganScreen extends StatelessWidget {
                       onPressed: () => _showDeleteConfirmationDialog(context),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

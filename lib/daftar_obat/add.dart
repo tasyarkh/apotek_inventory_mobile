@@ -115,9 +115,24 @@ class _AddObatScreenState extends State<AddObatScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: _tglKadaluarsaController,
-              decoration: _buildInputDecoration(
-                  'Tanggal Kadaluarsa (TAHUN-BULAN-TANGGAL)',
-                  Icons.calendar_today),
+              readOnly: true,
+              decoration: InputDecoration(
+                labelText: 'Tanggal Kadaluarsa (TAHUN-BULAN-TANGGAL)',
+                prefixIcon: Icon(Icons.calendar_today),
+                border: OutlineInputBorder(),
+              ),
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+
+                if (pickedDate != null) {
+                  _tglKadaluarsaController.text = pickedDate.toIso8601String().split('T')[0];
+                }
+              },
             ),
             const SizedBox(height: 24),
             Center(
