@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'add.dart';
 import 'detail.dart';
 import 'dart:convert';
+import '../screens/beranda.dart';
 
 class DaftarObatHome extends StatefulWidget {
   const DaftarObatHome({super.key});
@@ -48,8 +49,20 @@ class _DaftarObatHomeState extends State<DaftarObatHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DAFTAR OBAT 💊',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const Beranda()),
+              (route) => false,
+            );
+          },
+        ),
+        title: const Text(
+          'DAFTAR OBAT 💊',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.teal[400]!,
         elevation: 0,
       ),

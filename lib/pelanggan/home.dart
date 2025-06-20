@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'add.dart';
 import 'detail.dart';
 import 'dart:convert';
+import '../screens/beranda.dart';
 
 class PelangganHome extends StatefulWidget {
   const PelangganHome({super.key});
@@ -48,6 +49,16 @@ class _PelangganHomeState extends State<PelangganHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const Beranda()),
+              (route) => false,
+            );
+          },
+        ),
         title: const Text(
           'DATA PASIEN 👤',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

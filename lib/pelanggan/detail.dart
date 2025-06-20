@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'edit.dart';
 import 'package:inv_apt_mobile/pelanggan/home.dart';
-
-
 class DetailPelangganScreen extends StatelessWidget {
   final String id;
   final String nama;
@@ -89,8 +87,20 @@ class DetailPelangganScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail Pelanggan',
-            style: TextStyle(color: Colors.white)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const PelangganHome()),
+              (route) => false,
+            );
+          },
+        ),
+        title: const Text(
+          'DATA PASIEN 👤',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.greenAccent[400]!,
         elevation: 0,
       ),
