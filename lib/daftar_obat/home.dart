@@ -4,6 +4,9 @@ import 'add.dart';
 import 'detail.dart';
 import 'dart:convert';
 import '../screens/beranda.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class DaftarObatHome extends StatefulWidget {
   const DaftarObatHome({super.key});
@@ -39,6 +42,34 @@ class _DaftarObatHomeState extends State<DaftarObatHome> {
     }
   }
 
+  void _printObatList() async {
+            final pdf = pw.Document();
+
+            pdf.addPage(
+              pw.MultiPage(
+                build: (context) => [
+                  pw.Text('Laporan Data Obat Apotek',
+                      style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+                  pw.SizedBox(height: 16),
+                  pw.Table.fromTextArray(
+                    headers: ['Nama Obat', 'Stok', 'Kadaluarsa'],
+                    data: daftarObatList.map((obat) {
+                      return [
+                        obat['nama_obat'] ?? '',
+                        obat['stock'] ?? '',
+                        obat['tgl_kadaluarsa'] ?? '',
+                      ];
+                    }).toList(),
+                  ),
+                ],
+              ),
+            );
+
+            await Printing.layoutPdf(
+              onLayout: (PdfPageFormat format) async => pdf.save(),
+            );
+          }
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +96,14 @@ class _DaftarObatHomeState extends State<DaftarObatHome> {
         ),
         backgroundColor: Colors.teal[400]!,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.print),
+            onPressed: () {
+              _printObatList(); // Fungsi print
+            },
+          ),
+        ],
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator(color: Colors.teal[400]!))

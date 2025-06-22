@@ -184,9 +184,9 @@ class _AddStockObatScreenState extends State<AddStockObatScreen> {
                   _buildInputDecoration('Pilih Jenis Obat', Icons.category),
               value: _selectedJenisObat,
               items: const [
-                DropdownMenuItem(value: 'padat', child: Text('Padat')),
-                DropdownMenuItem(value: 'cair', child: Text('Cair')),
-                DropdownMenuItem(value: 'serbuk', child: Text('Serbuk')),
+                DropdownMenuItem(value: 'Kode Merah', child: Text('Kode Merah')),
+                DropdownMenuItem(value: 'Kode Biru', child: Text('Kode Biru')),
+                DropdownMenuItem(value: 'Kode Hijau', child: Text('Kode Hijau')),
               ],
               onChanged: (value) {
                 setState(() {

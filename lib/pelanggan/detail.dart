@@ -66,10 +66,10 @@ class DetailPelangganScreen extends StatelessWidget {
           );
 
           // Arahkan ke halaman Home dan hapus semua route sebelumnya
-          Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const PelangganHome()),
-        );
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const PelangganHome()),
+            (Route<dynamic> route) => false,
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Gagal: ${data['message']}')),

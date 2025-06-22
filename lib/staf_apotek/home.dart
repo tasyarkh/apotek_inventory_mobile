@@ -92,7 +92,7 @@ class _StafHomeState extends State<StafHome> {
           ),
         ],
       ),
-      body: isLoading
+      body: isLoading 
           ? Center(
               child:
                   CircularProgressIndicator(color: Colors.lightGreen[400]!))

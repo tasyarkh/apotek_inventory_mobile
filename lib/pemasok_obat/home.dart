@@ -3,6 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'add.dart';
 import 'detail.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:pdf/pdf.dart';
 
 class PemasokObatHome extends StatefulWidget {
   const PemasokObatHome({super.key});
@@ -44,6 +47,34 @@ class _PemasokObatHomeState extends State<PemasokObatHome> {
     }
   }
 
+  void _printPemasokList() async {
+            final pdf = pw.Document();
+
+            pdf.addPage(
+              pw.MultiPage(
+                build: (context) => [
+                  pw.Text('Laporan Data Pemasok Apotek',
+                      style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+                  pw.SizedBox(height: 16),
+                  pw.Table.fromTextArray(
+                    headers: ['Perusahaan', 'Alamat', 'Email'],
+                    data: pemasokList.map((pemasok) {
+                      return [
+                        pemasok['nama_perusahaan'] ?? '',
+                        pemasok['alamat_perusahaan'] ?? '',
+                        pemasok['email'] ?? '',
+                      ];
+                    }).toList(),
+                  ),
+                ],
+              ),
+            );
+
+            await Printing.layoutPdf(
+              onLayout: (PdfPageFormat format) async => pdf.save(),
+            );
+          }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +83,14 @@ class _PemasokObatHomeState extends State<PemasokObatHome> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.lightBlue[400],
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.print),
+            onPressed: () {
+              _printPemasokList(); // Fungsi print
+            },
+          ),
+        ],
       ),
       body: isLoading
           ? Center(

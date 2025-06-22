@@ -4,6 +4,9 @@ import 'add.dart';
 import 'detail.dart';
 import 'dart:convert';
 import '../screens/beranda.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class PelangganHome extends StatefulWidget {
   const PelangganHome({super.key});
@@ -39,6 +42,34 @@ class _PelangganHomeState extends State<PelangganHome> {
     }
   }
 
+    void _printPasienList() async {
+            final pdf = pw.Document();
+
+            pdf.addPage(
+              pw.MultiPage(
+                build: (context) => [
+                  pw.Text('Laporan Data Pasien Apotek',
+                      style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+                  pw.SizedBox(height: 16),
+                  pw.Table.fromTextArray(
+                    headers: ['Nama', 'Alamat', 'No HP'],
+                    data: pelangganList.map((pelanggan) {
+                      return [
+                        pelanggan['nama'] ?? '',
+                        pelanggan['alamat'] ?? '',
+                        pelanggan['no_hp'] ?? '',
+                      ];
+                    }).toList(),
+                  ),
+                ],
+              ),
+            );
+
+            await Printing.layoutPdf(
+              onLayout: (PdfPageFormat format) async => pdf.save(),
+            );
+          }
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +96,14 @@ class _PelangganHomeState extends State<PelangganHome> {
         ),
         backgroundColor: Colors.greenAccent[400]!,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.print),
+            onPressed: () {
+              _printPasienList(); // Fungsi print
+            },
+          ),
+        ],
       ),
       body: isLoading
           ? Center(
