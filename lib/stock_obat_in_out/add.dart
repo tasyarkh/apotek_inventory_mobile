@@ -38,14 +38,15 @@ class _AddStockObatScreenState extends State<AddStockObatScreen> {
   }
 
   Future<void> _fetchObat() async {
-    final response = await http.get(Uri.parse(
-        'http://localhost:80/api_apotek/daftar_obat/get_all_obat.php'));
-    if (response.statusCode == 200) {
-      setState(() {
-        _listObat = json.decode(response.body);
-      });
+      final response = await http.get(Uri.parse(
+          'http://localhost:80/api_apotek/daftar_obat/get_all_obat.php'));
+      if (response.statusCode == 200) {
+        setState(() {
+          _listObat = json.decode(response.body);
+        });
+      }
     }
-  }
+
 
   Future<void> _fetchPemasok() async {
     final response = await http.get(Uri.parse(
