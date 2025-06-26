@@ -1,5 +1,9 @@
 <?php
 include '../conn.php';
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST");
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama_perusahaan = $_POST['nama_perusahaan'];

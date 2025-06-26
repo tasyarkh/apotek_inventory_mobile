@@ -1,5 +1,9 @@
 <?php
 include '../conn.php';
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST");
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $kode_obat = $_POST['kode_obat'];
@@ -7,14 +11,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stock = $_POST['stock'];
     $tgl_kadaluarsa = $_POST['tgl_kadaluarsa'];
 
-    $query = "UPDATE daftar_obat SET nama_obat='$nama_obat', stock=$stock, tgl_kadaluarsa='$tgl_kadaluarsa' WHERE kode_obat=$kode_obat";
+    $query = "UPDATE daftar_obat SET nama_obat='$nama_obat', stock=$stock, tgl_kadaluarsa='$tgl_kadaluarsa' WHERE kode_obat='$kode_obat'";
 
     if ($connect->query($query) === TRUE) {
-        echo json_encode(["success" => true, "message" => "Data berhasil diperbarui"]);
+        echo json_encode([
+            "success" => true,
+            "message" => "Data berhasil diperbarui"
+        ]);
     } else {
-        echo json_encode(["success" => false, "message" => "Data gagal diperbarui: " . $connect->error]);
+        echo json_encode([
+            "success" => false,
+            "message" => "Data gagal diperbarui: " . $connect->error
+        ]);
     }
 } else {
-    echo json_encode(["success" => false, "message" => "Invalid Request"]);
+    echo json_encode([
+        "success" => false,
+        "message" => "Invalid Request"
+    ]);
 }
 ?>

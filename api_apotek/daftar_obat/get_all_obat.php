@@ -5,7 +5,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 
 include '../conn.php';
 
-$queryResult = $connect->query("SELECT kode_obat, nama_obat FROM daftar_obat");
+$queryResult = $connect->query("SELECT kode_obat, nama_obat, stock  FROM daftar_obat");
 
 $result = array();
 while ($fetchData = $queryResult->fetch_assoc()) {
